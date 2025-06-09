@@ -1,0 +1,68 @@
+{
+  "author": "l0gicgate",
+  "bugs": {
+    "url": "https://github.com/lgse/cqrs/issues"
+  },
+  "description": "CQRS components for TypeScript",
+  "homepage": "https://github.com/lgse/cqrs#readme",
+  "license": "MIT",
+  "name": "cqrs",
+  "type": "module",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lgse/cqrs.git"
+  },
+  "scripts": {
+    "build": "bun run build:clean && bun run build:esm && bun run build:cjs",
+    "build:clean": "rm -rf dist",
+    "build:esm": "tsc --module esnext --outDir dist/esm --declarationDir dist/types && mv dist/esm/index.js dist/index.mjs",
+    "build:cjs": "tsc --module commonjs --outDir dist && rm -rf dist/esm",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "@eslint/eslintrc": "^3",
+    "@lgse/esbuild-jest": "^1.0.2",
+    "@types/bun": "latest",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20",
+    "esbuild": "^0.25.5",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.3",
+    "eslint-plugin-perfectionist": "^4.6.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.5.3",
+    "type-fest": "^4.41.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1"
+  },
+  "keywords": [
+    "CQRS",
+    "command",
+    "bus",
+    "event",
+    "bus",
+    "query",
+    "bus"
+  ]
+}
