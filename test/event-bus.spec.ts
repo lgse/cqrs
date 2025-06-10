@@ -1,9 +1,14 @@
-import { AbstractEventHandler, Event, EventBus, EventsHandler } from '../src';
+import {
+  AbstractEvent,
+  AbstractEventHandler,
+  EventBus,
+  EventsHandler,
+} from '../src';
 
 const handled = jest.fn();
 
-class TestEvent extends Event {}
-class TestEvent2 extends Event {}
+class TestEvent extends AbstractEvent<TestEvent> {}
+class TestEvent2 extends AbstractEvent<TestEvent> {}
 
 @EventsHandler(TestEvent, TestEvent2)
 class TestEventHandler extends AbstractEventHandler<TestEvent> {

@@ -1,8 +1,9 @@
 export default {
-  rootDir: '.',
+  rootDir: 'test',
+  setupFilesAfterEnv: ['<rootDir>/setup.ts'],
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/test/**/*.spec.ts'],
+  testMatch: ['<rootDir>/**/*.spec.ts'],
   transform: {
-    '^.+\\.(mjs|js|ts)?$': ['@lgse/esbuild-jest', { sourcemap: true }],
+    '^.+\\.(mjs|js|ts)?$': 'ts-jest',
   },
 };

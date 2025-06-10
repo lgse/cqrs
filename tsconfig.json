@@ -1,22 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2021", // Or a suitable ES target for your consumers (e.g., es2015, es2020)
-    "module": "commonjs", // For Node.js environments (CJS)
-    "moduleResolution": "node", // How modules are resolved
-    "baseUrl": "./", // Base directory to resolve non-absolute module names
-    "outDir": "./dist", // Output directory for compiled JavaScript
-    "declaration": true, // Generate .d.ts files for type declarations
-    "declarationDir": "./dist/types", // Directory for .d.ts files
-    "strict": true, // Enable all strict type-checking options
-    "esModuleInterop": true, // Enables `allowSyntheticDefaultImports` for better interop
-    "skipLibCheck": true, // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true, // Ensure consistent file casing
-    "lib": ["es2021"], // Include built-in type definitions
-    "allowJs": false, // Don't allow JavaScript files in your source
-    "noEmitOnError": true, // Don't emit output if there are errors
-    "rootDir": "./src", // Root directory of your TypeScript source files
-    "sourceMap": true // Generate source maps for debugging
+    "allowJs": false,
+    "baseUrl": "./",
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2021"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "target": "es2021",
   },
-  "include": ["src/**/*.ts"], // Files to include in the compilation
-  "exclude": ["dist", "node_modules"] // Files to exclude
+  "exclude": ["dist", "node_modules"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
 }

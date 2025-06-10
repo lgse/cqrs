@@ -1,8 +1,8 @@
-import type { IQuery } from '../interfaces';
-
+import { Validator } from '../helpers/validator';
 import { RESULT_TYPE_SYMBOL } from './constants';
 
-export class Query<TResult = any> implements IQuery {
-  // @ts-expect-error this property has no initializer, and it is used so we can infer the result type
+export class AbstractQuery<TResult = any> extends Validator<
+  AbstractQuery<TResult>
+> {
   readonly [RESULT_TYPE_SYMBOL]: TResult;
 }

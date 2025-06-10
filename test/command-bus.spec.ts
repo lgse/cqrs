@@ -1,13 +1,13 @@
 import {
+  AbstractCommand,
   AbstractCommandHandler,
-  Command,
   CommandBus,
   CommandHandler,
 } from '../src';
 
 const executed = jest.fn();
 
-class TestCommand extends Command {}
+class TestCommand extends AbstractCommand<TestCommand> {}
 
 @CommandHandler(TestCommand)
 class TestCommandHandler extends AbstractCommandHandler<TestCommand> {

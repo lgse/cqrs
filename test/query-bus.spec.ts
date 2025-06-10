@@ -1,7 +1,7 @@
 /* eslint-disable perfectionist/sort-modules */
 import {
+  AbstractQuery,
   AbstractQueryHandler,
-  Query,
   QueryBus,
   QueryHandler,
   QueryHandlerNotFoundException,
@@ -11,7 +11,7 @@ class TestResult {
   constructor(public readonly value: string) {}
 }
 
-class TestQuery extends Query<TestResult> {}
+class TestQuery extends AbstractQuery<TestResult> {}
 
 @QueryHandler(TestQuery)
 class TestQueryHandler extends AbstractQueryHandler<TestQuery, TestResult> {
@@ -45,7 +45,7 @@ describe('QueryBus', () => {
   });
 
   it('should register multiple handlers', async () => {
-    class AnotherQuery extends Query<string> {}
+    class AnotherQuery extends AbstractQuery<string> {}
 
     @QueryHandler(AnotherQuery)
     class AnotherQueryHandler extends AbstractQueryHandler<

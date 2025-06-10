@@ -1,3 +1,5 @@
-import type { ICommand } from '../interfaces';
+import { Validator } from '../helpers/validator';
 
-export class Command implements ICommand {}
+export abstract class AbstractCommand<
+  TCommand extends object,
+> extends Validator<TCommand> {}

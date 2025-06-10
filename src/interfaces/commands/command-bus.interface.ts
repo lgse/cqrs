@@ -1,5 +1,5 @@
-import type { Command } from '../../classes';
+import type { AbstractCommand } from '../../classes';
 
 export interface ICommandBus {
-  execute(command: Command): Promise<void>;
+  execute(command: AbstractCommand<any>): Promise<void>;
 }

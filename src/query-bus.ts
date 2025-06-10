@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import type { Query } from './classes';
+import type { AbstractQuery } from './classes';
 import type { QueryHandlerType } from './classes';
 import type {
   ILogger,
@@ -47,7 +47,7 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     });
   }
 
-  async execute<TResult>(query: Query<TResult>): Promise<TResult> {
+  async execute<TResult>(query: AbstractQuery<TResult>): Promise<TResult> {
     const queryId = this.getQueryId(query as unknown as QueryBase);
 
     const handler = this.handlers.get(queryId);
