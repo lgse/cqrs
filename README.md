@@ -51,9 +51,14 @@ class TestEvent extends AbstractEvent<TestEvent> {
     public id: string;
 }
 
-@EventsHandler(TestEvent)
-class TestEventHandler extends AbstractEventHandler<TestEvent> {
-  public handle(_event: TestEvent): Promise<void> {
+class TestEvent2 extends AbstractEvent<TestEvent2> {
+    @IsUUID()
+    public id: string;
+}
+
+@EventsHandler(TestEvent, TestEvent2)
+class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
+  public handle(_event: TestEvent | TestEvent2): Promise<void> {
     return Promise.resolve();
   }
 }

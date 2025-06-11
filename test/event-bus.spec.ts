@@ -8,11 +8,11 @@ import {
 const handled = jest.fn();
 
 class TestEvent extends AbstractEvent<TestEvent> {}
-class TestEvent2 extends AbstractEvent<TestEvent> {}
+class TestEvent2 extends AbstractEvent<TestEvent2> {}
 
 @EventsHandler(TestEvent, TestEvent2)
-class TestEventHandler extends AbstractEventHandler<TestEvent> {
-  public handle(_event: TestEvent): Promise<void> {
+class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
+  public handle(_event: TestEvent | TestEvent2): Promise<void> {
     handled();
     return Promise.resolve();
   }
