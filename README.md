@@ -67,10 +67,10 @@ If you wanted to inject dependencies into your handlers, you can provide a custo
 ### Example: TypeDI Instantiation
 ```ts
 import { Container } from 'typedi';
-import { CommandBus } from '@lgse/cqrs';
+import { CommandBus, CommandHandlerType, ICommand, ICommandHandler, ICommandHandlerInstantiator } from '@lgse/cqrs';
 
 class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
-  instantiate<TCommand extends ICommand = any>(
+  instantiate<TCommand extends ICommand>(
     handler: CommandHandlerType<TCommand>,
   ): Promise<ICommandHandler<TCommand>> {
     return Container.get(handler);
@@ -81,6 +81,8 @@ const bus = new CommandBus({
     instantiator: new TypeDICommandHandlerInstantiator(),
 });
 ```
+
+---
 
 ### Command Bus
 
