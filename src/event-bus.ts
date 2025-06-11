@@ -1,4 +1,4 @@
-import type { EventHandlerType } from './classes';
+import type { EventsHandlerType } from './classes';
 import type {
   EventIdProvider,
   IEvent,
@@ -31,7 +31,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     this.instantiator = instantiator ?? defaultEventHandlerInstantiator;
   }
 
-  public bind(handler: EventHandlerType<EventBase>, eventId: string) {
+  public bind(handler: EventsHandlerType<EventBase>, eventId: string) {
     this.subscriptions.set(eventId, [
       ...(this.subscriptions.get(eventId) ?? []),
       async (event: EventBase) => {
@@ -61,12 +61,12 @@ export class EventBus<EventBase extends IEvent = IEvent>
     return Promise.all(events.map((event) => this.publish(event)));
   }
 
-  public register(handlers: EventHandlerType<EventBase>[]) {
+  public register(handlers: EventsHandlerType<EventBase>[]) {
     handlers.forEach((handler) => this.registerHandler(handler));
   }
 
   private reflectEvents(
-    handler: EventHandlerType<EventBase>,
+    handler: EventsHandlerType<EventBase>,
   ): Type<EventBase>[] {
     const events = Reflect.getMetadata(EVENTS_HANDLER_METADATA, handler);
 
@@ -77,7 +77,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     return events;
   }
 
-  private registerHandler(handler: EventHandlerType<EventBase>) {
+  private registerHandler(handler: EventsHandlerType<EventBase>) {
     const events = this.reflectEvents(handler);
     events.forEach((event) => {
       const eventId = this.eventIdProvider.getEventId(event);

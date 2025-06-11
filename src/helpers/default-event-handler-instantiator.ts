@@ -1,4 +1,4 @@
-import type { EventHandlerType } from '../classes';
+import type { EventsHandlerType } from '../classes';
 import type {
   IEvent,
   IEventHandler,
@@ -9,7 +9,7 @@ export class DefaultEventHandlerInstantiator
   implements IEventHandlerInstantiator
 {
   instantiate<TEvent extends IEvent = any>(
-    handler: EventHandlerType<TEvent>,
+    handler: EventsHandlerType<TEvent>,
   ): Promise<IEventHandler<TEvent>> {
     const instance = (
       handler as { instance: () => IEventHandler<TEvent> }

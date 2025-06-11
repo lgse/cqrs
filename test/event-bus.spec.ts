@@ -1,7 +1,7 @@
 import { IsUUID } from 'class-validator';
 
 import {
-  AbstractEventHandler,
+  AbstractEventsHandler,
   Event,
   EventBus,
   EventsHandler,
@@ -10,7 +10,7 @@ import {
 
 const handled = jest.fn();
 
-class InvalidEventsHandler extends AbstractEventHandler<TestEvent> {
+class InvalidEventsHandler extends AbstractEventsHandler<TestEvent> {
   public handle(_event: TestEvent): Promise<void> {
     return Promise.resolve();
   }
@@ -26,7 +26,7 @@ class TestEvent2 extends ValidatedEvent<TestEvent2> {
 }
 
 @EventsHandler(TestEvent, TestEvent2)
-class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
+class TestEventHandler extends AbstractEventsHandler<TestEvent | TestEvent2> {
   public handle(_event: TestEvent | TestEvent2): Promise<void> {
     handled();
     return Promise.resolve();

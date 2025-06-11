@@ -1,15 +1,15 @@
 import type { IEvent, IEventHandler } from '../interfaces';
 
-export type EventHandlerType<T extends IEvent = IEvent> =
-  typeof AbstractEventHandler<T>;
+export type EventsHandlerType<T extends IEvent = IEvent> =
+  typeof AbstractEventsHandler<T>;
 
-export abstract class AbstractEventHandler<TEvent extends IEvent>
+export abstract class AbstractEventsHandler<TEvent extends IEvent>
   implements IEventHandler<TEvent>
 {
   public static instance<T extends IEvent>(
     this: {
       new (): T;
-    } & typeof AbstractEventHandler<T>,
+    } & typeof AbstractEventsHandler<T>,
   ): T {
     return new (this as new () => T)();
   }
