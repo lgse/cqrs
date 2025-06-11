@@ -129,34 +129,42 @@ await bus.execute(command);
 
 ```ts
 import { IsUUID } from 'class-validator';
-import { EventBus, EventsHandler, ValidatedEvent } from '@lgse/cqrs';
+import { AbstractEventsHandler, EventBus, EventsHandler, ValidatedEvent } from '@lgse/cqrs';
 
-class TestEvent extends ValidatedEvent<TestEvent> {
+class UserCreatedEvent extends ValidatedEvent<UserCreatedEvent> {
   @IsUUID()
   public id: string;
+  
+  @IsString()
+  public name: string;
 }
 
-class TestEvent2 extends ValidatedEvent<TestEvent2> {
+class UserUpdatedEvent extends ValidatedEvent<UserUpdatedEvent> {
   @IsUUID()
   public id: string;
+
+  @IsString()
+  public name: string;
 }
 
-@EventsHandler(TestEvent, TestEvent2)
-class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
-  public handle(event: TestEvent | TestEvent2): Promise<void> {
+@EventsHandler(UserCreatedEvent, UserUpdatedEvent)
+class UserEventsHandler extends AbstractEventsHandler<UserCreatedEvent | UserUpdatedEvent> {
+  public handle(event: UserCreatedEvent | UserUpdatedEvent): Promise<void> {
     // handle the event
   }
 }
 
 const bus = new EventBus();
-bus.register([TestEventHandler]);
+bus.register([UserEventsHandler]);
 
-const event = new TestEvent({
+const event = new UserCreatedEvent({
   id: '123e4567-e89b-12d3-a456-426614174000',
+  name: 'test',
 });
 
-const event2 = new TestEvent2({
-    id: '123e4567-e89b-12d3-a456-426614174000',
+const event2 = new UserUpdatedEvent({
+   id: '123e4567-e89b-12d3-a456-426614174000',
+   name: 'test',
 });
 
 // publish one event at a time
@@ -175,7 +183,7 @@ await bus.publishAll([event, event2]);
 import { IsIn, IsInt } from 'class-validator';
 import { QueryBus, QueryHandler, ValidatedQuery } from '@lgse/cqrs';
 
-class TestQuery extends ValidatedQuery<TestQuery, string> {
+class GetItemsQuery extends ValidatedQuery<GetItemsQuery, string> {
   @IsIn(['asc', 'desc'])
   public order: 'asc' | 'desc';
 
@@ -183,17 +191,17 @@ class TestQuery extends ValidatedQuery<TestQuery, string> {
   public page: number;
 }
 
-@QueryHandler(TestQuery)
-class TestQueryHandler extends AbstractQueryHandler<TestQuery, string[]> {
-  public execute(query: TestQuery): Promise<string[]> {
+@QueryHandler(GetItemsQuery)
+class GetItemsQueryHandler extends AbstractQueryHandler<GetItemsQuery, string[]> {
+  public execute(query: GetItemsQuery): Promise<string[]> {
     return ['item1', 'item2'];
   }
 }
 
 const bus = new QueryBus();
-bus.register([TestQueryHandler]);
+bus.register([GetItemsQueryHandler]);
 
-const query = new TestQuery({
+const query = new GetItemsQuery({
   order: 'asc',
   page: 1,
 });
