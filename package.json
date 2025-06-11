@@ -34,7 +34,8 @@
     "build:cjs": "tsc --module commonjs --project tsconfig.build.json --outDir dist && rm -rf dist/esm",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "reflect-metadata": "^0.2.2"

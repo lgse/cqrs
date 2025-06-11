@@ -25,7 +25,7 @@ jobs:
         run: bun install
 
       - name: Run tests and collect coverage
-        run: jest --coverage
+        run: bun run test:coverage
 
       - name: Upload coverage to Codecov (only on push to main)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
