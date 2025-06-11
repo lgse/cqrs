@@ -87,25 +87,36 @@ const bus = new CommandBus({
 ### Command Bus
 
 ```ts
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 import { CommandBus, CommandHandler, ValidatedCommand } from '@lgse/cqrs';
+import { TypeDICommandHandlerInstantiator } from './type-di-command-handler-instantiator';
+import { UsersRepository } from './users.repository';
 
-class TestCommand extends ValidatedCommand<TestCommand> {
+class CreateUser extends ValidatedCommand<CreateUser> {
+  @IsUUID()
+  public id: string;
+    
   @IsString()
   public name: string;
 }
 
-@CommandHandler(TestCommand)
-class TestCommandHandler extends ValidatedCommandHandler<TestCommand> {
-  public execute(_command: TestCommand): Promise<void> {
-    return Promise.resolve();
+@CommandHandler(CreateUser)
+class CreateUserCommandHandler extends ValidatedCommandHandler<CreateUser> {
+  @Inject(UsersRepository)
+  private usersRepository: UsersRepository;
+    
+  public async execute(command: TestCommand): Promise<void> {
+    await this.usersRepository.create(command.name);
   }
 }
 
-const bus = new CommandBus();
-bus.register([TestCommandHandler]);
+const bus = new CommandBus({
+  instantiator: new TypeDICommandHandlerInstantiator(),
+});
+bus.register([CreateUserCommandHandler]);
 
-const command = new TestCommand({
+const command = new CreateUserCommand({
+  id: '123e4567-e89b-12d3-a456-426614174000',
   name: 'test',
 });
 
@@ -132,8 +143,8 @@ class TestEvent2 extends ValidatedEvent<TestEvent2> {
 
 @EventsHandler(TestEvent, TestEvent2)
 class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
-  public handle(_event: TestEvent | TestEvent2): Promise<void> {
-    return Promise.resolve();
+  public handle(event: TestEvent | TestEvent2): Promise<void> {
+    // handle the event
   }
 }
 
@@ -173,9 +184,9 @@ class TestQuery extends ValidatedQuery<TestQuery, string> {
 }
 
 @QueryHandler(TestQuery)
-class TestQueryHandler extends AbstractQueryHandler<TestQuery, string> {
-  public execute(_query: TestQuery): Promise<string> {
-    return Promise.resolve('test-result');
+class TestQueryHandler extends AbstractQueryHandler<TestQuery, string[]> {
+  public execute(query: TestQuery): Promise<string[]> {
+    return ['item1', 'item2'];
   }
 }
 
