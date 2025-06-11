@@ -60,29 +60,30 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     return (await handler(query as unknown as QueryBase)) as TResult;
   }
 
-  public register(handlers: QueryHandlerType<QueryBase>[] = []) {
+  public register(handlers: QueryHandlerType<QueryBase>[]) {
     handlers.forEach((handler) => this.registerHandler(handler));
   }
 
   protected registerHandler(handler: QueryHandlerType<QueryBase>) {
     const target = this.reflectQueryId(handler);
-    if (!target) {
-      throw new InvalidQueryHandlerException();
-    }
+
     if (this.handlers.has(target)) {
       this.logger.warn(
-        `Query handler [${handler.constructor.name}] is already registered. Overriding previously registered handler.`,
+        `Query handler ${handler.name} is already registered. Overriding previously registered handler.`,
       );
     }
+
     this.bind(handler, target);
   }
 
   private getQueryId(query: QueryBase): string {
     const { constructor: queryType } = Object.getPrototypeOf(query);
+
     const queryMetadata: QueryMetadata = Reflect.getMetadata(
       QUERY_METADATA,
       queryType,
     );
+
     if (!queryMetadata) {
       throw new QueryHandlerNotFoundException(queryType.name);
     }
@@ -95,17 +96,21 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     return constructor.name as string;
   }
 
-  private reflectQueryId(
-    handler: QueryHandlerType<QueryBase>,
-  ): string | undefined {
-    const query: Type<QueryBase> = Reflect.getMetadata(
-      QUERY_HANDLER_METADATA,
-      handler,
-    );
-    const queryMetadata: QueryMetadata = Reflect.getMetadata(
-      QUERY_METADATA,
-      query,
-    );
-    return queryMetadata.id;
+  private reflectQueryId(handler: QueryHandlerType<QueryBase>): string {
+    try {
+      const query: Type<QueryBase> = Reflect.getMetadata(
+        QUERY_HANDLER_METADATA,
+        handler,
+      );
+
+      const queryMetadata: QueryMetadata = Reflect.getMetadata(
+        QUERY_METADATA,
+        query,
+      );
+
+      return queryMetadata.id;
+    } catch {
+      throw new InvalidQueryHandlerException();
+    }
   }
 }

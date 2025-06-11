@@ -1,4 +1,5 @@
 import { IsIn, IsInt, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import * as classValidator from 'class-validator';
 
 import { ValidatedCommand, ValidatedEvent, ValidatedQuery } from '../../src';
 
@@ -50,6 +51,19 @@ describe('Validator', () => {
     // @ts-expect-error we're forcing an error
     expect(() => new TestQuery({ order: 'test', page: 1 })).toThrow(
       'order must be one of the following values: asc, desc',
+    );
+  });
+
+  it('should throw an error when no constraints are provided', () => {
+    jest.spyOn(classValidator, 'validateSync').mockReturnValue([
+      {
+        property: 'order',
+      },
+    ]);
+
+    // @ts-expect-error we're forcing an error
+    expect(() => new TestQuery({ order: 'invalid' })).toThrow(
+      'Validation failed for property: order',
     );
   });
 });

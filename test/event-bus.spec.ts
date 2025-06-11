@@ -10,6 +10,12 @@ import {
 
 const handled = jest.fn();
 
+class InvalidEventsHandler extends AbstractEventHandler<TestEvent> {
+  public handle(_event: TestEvent): Promise<void> {
+    return Promise.resolve();
+  }
+}
+
 class TestEvent extends Event<TestEvent> {
   public id: string;
 }
@@ -66,5 +72,19 @@ describe('EventBus', () => {
     const event = new TestEvent();
 
     await expect(bus.publish(event)).resolves.not.toThrow();
+  });
+
+  it('should return false when publishing an event with no constructor', async () => {
+    const bus = new EventBus();
+    const event = {};
+
+    await expect(bus.publish(event)).resolves.toBe(false);
+  });
+
+  it('should throw when registering an invalid handler', () => {
+    const bus = new EventBus();
+    expect(() => bus.register([InvalidEventsHandler])).toThrow(
+      "An invalid events handler has been provided. Please ensure that the provided handler is a class annotated with @EventsHandler and contains a 'handle' method.",
+    );
   });
 });

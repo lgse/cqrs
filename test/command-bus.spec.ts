@@ -21,6 +21,10 @@ class TestCommand2 extends ValidatedCommand<TestCommand2> {
   public name: string;
 }
 
+class UnknownCommand extends Command<TestCommand> {
+  public name: string;
+}
+
 @CommandHandler(TestCommand)
 class TestCommandHandler extends AbstractCommandHandler<TestCommand> {
   public execute(command: TestCommand): Promise<void> {
@@ -33,6 +37,12 @@ class TestCommandHandler extends AbstractCommandHandler<TestCommand> {
 class TestCommand2Handler extends AbstractCommandHandler<TestCommand2> {
   public execute(command: TestCommand2): Promise<void> {
     executed(command.name);
+    return Promise.resolve();
+  }
+}
+
+class InvalidHandler extends AbstractCommandHandler<TestCommand> {
+  public execute(_command: TestCommand): Promise<void> {
     return Promise.resolve();
   }
 }
@@ -59,6 +69,37 @@ describe('CommandBus', () => {
 
     await expect(async () => bus.execute(command)).rejects.toThrow(
       'No handler found for the command: "TestCommand"',
+    );
+  });
+
+  it('should throw an error if the command has not been registered with any handlers', async () => {
+    const bus = new CommandBus();
+    const command = new UnknownCommand();
+
+    await expect(async () => bus.execute(command)).rejects.toThrow(
+      'No handler found for the command: "UnknownCommand"',
+    );
+  });
+
+  it('should log a warning if a handler is already registered', () => {
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn(),
+      warn: jest.fn(),
+    };
+    const bus = new CommandBus({ logger });
+
+    bus.register([TestCommandHandler, TestCommandHandler]);
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      'Command handler TestCommandHandler is already registered. Overriding previously registered handler.',
+    );
+  });
+
+  it('should throw an error if the handler is invalid', () => {
+    const bus = new CommandBus();
+    expect(() => bus.register([InvalidHandler])).toThrow(
+      "An invalid command handler has been provided. Please ensure that the provided handler is a class annotated with @CommandHandler and contains an 'execute' method.",
     );
   });
 });

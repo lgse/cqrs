@@ -19,6 +19,7 @@ export abstract class Validator<TObject extends object> {
           if (error.constraints) {
             return Object.values(error.constraints).join(', ');
           }
+
           return `Validation failed for property: ${error.property}`;
         })
         .join('\n');

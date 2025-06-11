@@ -65,9 +65,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
     return executeFn(command);
   }
 
-  public register(
-    handlers: (typeof AbstractCommandHandler<CommandBase>)[] = [],
-  ) {
+  public register(handlers: (typeof AbstractCommandHandler<CommandBase>)[]) {
     handlers.forEach((handler) => this.registerHandler(handler));
   }
 
@@ -77,6 +75,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
       COMMAND_METADATA,
       commandType,
     );
+
     if (!commandMetadata) {
       throw new CommandHandlerNotFoundException(commandType.name);
     }
@@ -89,31 +88,30 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
     return constructor.name as string;
   }
 
-  private reflectCommandId(
-    handler: CommandHandlerType<CommandBase>,
-  ): string | undefined {
-    const command: Type<ICommand> = Reflect.getMetadata(
-      COMMAND_HANDLER_METADATA,
-      handler,
-    );
+  private reflectCommandId(handler: CommandHandlerType<CommandBase>): string {
+    try {
+      const command: Type<ICommand> = Reflect.getMetadata(
+        COMMAND_HANDLER_METADATA,
+        handler,
+      );
 
-    const commandMetadata: CommandMetadata = Reflect.getMetadata(
-      COMMAND_METADATA,
-      command,
-    );
+      const commandMetadata: CommandMetadata = Reflect.getMetadata(
+        COMMAND_METADATA,
+        command,
+      );
 
-    return commandMetadata.id;
+      return commandMetadata.id;
+    } catch {
+      throw new InvalidCommandHandlerException();
+    }
   }
 
   private registerHandler(handler: typeof AbstractCommandHandler<CommandBase>) {
     const target = this.reflectCommandId(handler);
-    if (!target) {
-      throw new InvalidCommandHandlerException();
-    }
 
     if (this.handlers.has(target)) {
       this.logger.warn(
-        `Command handler [${handler.constructor.name}] is already registered. Overriding previously registered handler.`,
+        `Command handler ${handler.name} is already registered. Overriding previously registered handler.`,
       );
     }
 

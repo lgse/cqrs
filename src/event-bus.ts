@@ -8,6 +8,7 @@ import type {
 import type { Type } from './types';
 
 import { EVENTS_HANDLER_METADATA } from './decorators/constants';
+import { InvalidEventsHandlerException } from './exceptions/invalid-events-handler.exception';
 import { defaultEventHandlerInstantiator } from './helpers/default-event-handler-instantiator';
 import { defaultEventIdProvider } from './helpers/default-event-id-provider';
 
@@ -42,9 +43,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
 
   public async publish<TEvent extends EventBase>(event: TEvent) {
     const { constructor } = Object.getPrototypeOf(event);
-    if (!constructor) {
-      return false;
-    }
+
     const eventId = this.eventIdProvider.getEventId(constructor);
     if (!eventId) {
       return false;
@@ -62,14 +61,20 @@ export class EventBus<EventBase extends IEvent = IEvent>
     return Promise.all(events.map((event) => this.publish(event)));
   }
 
-  public register(handlers: EventHandlerType<EventBase>[] = []) {
+  public register(handlers: EventHandlerType<EventBase>[]) {
     handlers.forEach((handler) => this.registerHandler(handler));
   }
 
   private reflectEvents(
     handler: EventHandlerType<EventBase>,
   ): Type<EventBase>[] {
-    return Reflect.getMetadata(EVENTS_HANDLER_METADATA, handler);
+    const events = Reflect.getMetadata(EVENTS_HANDLER_METADATA, handler);
+
+    if (!events) {
+      throw new InvalidEventsHandlerException();
+    }
+
+    return events;
   }
 
   private registerHandler(handler: EventHandlerType<EventBase>) {
