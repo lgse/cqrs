@@ -1,8 +1,10 @@
 export default {
-  rootDir: 'test',
-  setupFilesAfterEnv: ['<rootDir>/setup.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**'],
+  coverageDirectory: '<rootDir>/coverage',
+  coverageReporters: ['lcov', 'text', 'clover'],
+  rootDir: '.',
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/**/*.spec.ts'],
+  testMatch: ['<rootDir>/test/**/*.spec.ts'],
   transform: {
     '^.+\\.(mjs|js|ts)?$': 'ts-jest',
   },
