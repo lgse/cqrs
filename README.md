@@ -40,7 +40,7 @@ You will need to modify your `tsconfig.json`:
 
 ## Usage
 
-## Validation
+### Validation
 
 This library provides two approaches for working with commands, events, and queries:
 
@@ -57,7 +57,7 @@ This library provides two approaches for working with commands, events, and quer
 
 Choose the approach that best fits your application's needs. For most production applications, the validated classes are recommended for better data integrity and error handling.
 
-## Handler Instantiation
+### Handler Instantiation
 
 By default, handlers are instantiated using the `instance` method on the handler class. This method is defined on the `AbstractCommandHandler`, `AbstractEventHandler`, and `AbstractQueryHandler` classes.
 
