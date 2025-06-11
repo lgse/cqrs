@@ -29,7 +29,7 @@ npm install class-validator class-transformer
 
 You will need to modify your `tsconfig.json`:
 
-```
+```json5
 {
   "compilerOptions": {
     "emitDecoratorMetadata": true, // required by class-validator
