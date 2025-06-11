@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import type {
-  AbstractCommand,
   AbstractCommandHandler,
+  Command,
   CommandHandlerType,
 } from './classes';
 import type {
@@ -47,7 +47,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
     this.handlers.set(id, async (command: CommandBase) => {
       const instance = await this.instantiator.instantiate(handler);
 
-      return instance.execute(command as AbstractCommand<TCommand> & TCommand);
+      return instance.execute(command as Command<TCommand> & TCommand);
     });
   }
 

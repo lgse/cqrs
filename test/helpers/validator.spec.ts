@@ -1,8 +1,8 @@
 import { IsIn, IsInt, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-import { AbstractCommand, AbstractEvent, AbstractQuery } from '../../src';
+import { ValidatedCommand, ValidatedEvent, ValidatedQuery } from '../../src';
 
-class TestCommand extends AbstractCommand<TestCommand> {
+class TestCommand extends ValidatedCommand<TestCommand> {
   @IsString()
   @IsNotEmpty()
   public name: string;
@@ -11,12 +11,12 @@ class TestCommand extends AbstractCommand<TestCommand> {
   public phoneNumber: number;
 }
 
-class TestEvent extends AbstractEvent<TestEvent> {
+class TestEvent extends ValidatedEvent<TestEvent> {
   @IsUUID()
   public id: string;
 }
 
-class TestQuery extends AbstractQuery<TestQuery> {
+class TestQuery extends ValidatedQuery<TestQuery> {
   @IsIn(['asc', 'desc'])
   public order: 'asc' | 'desc';
 

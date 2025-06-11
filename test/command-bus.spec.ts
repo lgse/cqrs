@@ -1,18 +1,38 @@
+/* eslint-disable perfectionist/sort-modules */
+import { IsNotEmpty, IsString } from 'class-validator';
+
 import {
-  AbstractCommand,
   AbstractCommandHandler,
+  Command,
   CommandBus,
   CommandHandler,
+  ValidatedCommand,
 } from '../src';
 
 const executed = jest.fn();
 
-class TestCommand extends AbstractCommand<TestCommand> {}
+class TestCommand extends Command<TestCommand> {
+  public name: string;
+}
+
+class TestCommand2 extends ValidatedCommand<TestCommand2> {
+  @IsString()
+  @IsNotEmpty()
+  public name: string;
+}
 
 @CommandHandler(TestCommand)
 class TestCommandHandler extends AbstractCommandHandler<TestCommand> {
-  public execute(_command: TestCommand): Promise<void> {
-    executed();
+  public execute(command: TestCommand): Promise<void> {
+    executed(command.name);
+    return Promise.resolve();
+  }
+}
+
+@CommandHandler(TestCommand2)
+class TestCommand2Handler extends AbstractCommandHandler<TestCommand2> {
+  public execute(command: TestCommand2): Promise<void> {
+    executed(command.name);
     return Promise.resolve();
   }
 }
@@ -20,13 +40,17 @@ class TestCommandHandler extends AbstractCommandHandler<TestCommand> {
 describe('CommandBus', () => {
   it('should execute a command', async () => {
     const bus = new CommandBus();
-    bus.register([TestCommandHandler]);
+    bus.register([TestCommandHandler, TestCommand2Handler]);
 
-    const command = new TestCommand();
+    const command = new TestCommand({ name: 'test' });
+    const command2 = new TestCommand2({ name: 'test2' });
 
     await bus.execute(command);
+    await bus.execute(command2);
 
-    expect(executed).toHaveBeenCalledTimes(1);
+    expect(executed).toHaveBeenCalledWith('test');
+    expect(executed).toHaveBeenCalledWith('test2');
+    expect(executed).toHaveBeenCalledTimes(2);
   });
 
   it('should throw an error if no handler is found', async () => {
