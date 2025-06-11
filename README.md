@@ -7,9 +7,9 @@
 
 A collection of CQRS components for TypeScript:
 
-- Command Bus
-- Event Bus
-- Query Bus
+- [Command Bus](#command-bus)
+- [Event Bus](#event-bus)
+- [Query Bus](#query-bus)
 
 Inspired by the [NestJS CQRS module](https://github.com/nestjs/cqrs) without a dependency on RxJS.
 
@@ -19,7 +19,7 @@ Inspired by the [NestJS CQRS module](https://github.com/nestjs/cqrs) without a d
 npm install @lgse/cqrs
 ```
 
-## Validation (optional)
+### Validation Dependencies (optional)
 This library provides validation for commands, events, and queries using `class-validator` and instantiation using `class-transformer`.
 
 To use `ValidatedCommand`, `ValidatedEvent`, and `ValidatedQuery` you will need to install `class-validator` and `class-transformer` as peer dependencies.
@@ -40,7 +40,49 @@ You will need to modify your `tsconfig.json`:
 
 ## Usage
 
-### Command Bus with Validation
+## Validation
+
+This library provides two approaches for working with commands, events, and queries:
+
+1. **Validated Classes** (`ValidatedCommand`, `ValidatedEvent`, `ValidatedQuery`):
+    - Include built-in validation using `class-validator` and `class-transformer`
+    - Automatically validate data upon instantiation
+    - Throw descriptive errors when validation fails
+    - Require additional dependencies (`class-validator` and `class-transformer`)
+
+2. **Basic Classes** (`Command`, `Event`, `Query`):
+    - Lightweight with no validation
+    - Useful for simple scenarios or when you want to implement your own validation
+    - No additional dependencies required
+
+Choose the approach that best fits your application's needs. For most production applications, the validated classes are recommended for better data integrity and error handling.
+
+## Handler Instantiation
+
+By default, handlers are instantiated using the `instance` method on the handler class. This method is defined on the `AbstractCommandHandler`, `AbstractEventHandler`, and `AbstractQueryHandler` classes.
+
+If you wanted to inject dependencies into your handlers, you can provide a custom `ICommandHandlerInstantiator`, `IEventHandlerInstantiator`, or `IQueryHandlerInstantiator` to the bus constructor.
+
+
+### Example: TypeDI Instantiation
+```ts
+import { Container } from 'typedi';
+import { CommandBus } from '@lgse/cqrs';
+
+class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
+  instantiate<TCommand extends ICommand = any>(
+    handler: CommandHandlerType<TCommand>,
+  ): Promise<ICommandHandler<TCommand>> {
+    return Container.get(handler);
+  }
+}
+
+const bus = new CommandBus({
+    instantiator: new TypeDICommandHandlerInstantiator(),
+});
+```
+
+### Command Bus
 
 ```ts
 import { IsString } from 'class-validator';
@@ -68,76 +110,9 @@ const command = new TestCommand({
 await bus.execute(command);
 ```
 
-### Command Bus without Validation
+---
 
-```ts
-import { Command, CommandBus, CommandHandler, ICommand } from '@lgse/cqrs';
-
-class TestCommand extends Command<TestCommand> {
-  public name: string;
-}
-
-@CommandHandler(TestCommand)
-class TestCommandHandler extends AbstractCommandHandler<TestCommand> {
-  public execute(_command: TestCommand): Promise<void> {
-    return Promise.resolve();
-  }
-}
-
-const bus = new CommandBus();
-bus.register([TestCommandHandler]);
-
-const command = new TestCommand({
-  name: 'test',
-});
-
-await bus.execute(command);
-```
-
-### Event Bus without Validation
-
-```ts
-import { EventBus, EventsHandler, IEvent } from '@lgse/cqrs';
-
-class TestEvent extends IEvent {
-  public id: string;
-}
-
-class TestEvent2 extends IEvent {
-  public id: string;
-}
-
-@EventsHandler(TestEvent, TestEvent2)
-class TestEventHandler extends AbstractEventHandler<TestEvent | TestEvent2> {
-  public handle(_event: TestEvent | TestEvent2): Promise<void> {
-    return Promise.resolve();
-  }
-}
-
-const bus = new EventBus();
-
-bus.register([TestEventHandler]);
-
-const event = new TestEvent({
-  id: '123e4567-e89b-12d3-a456-426614174000',
-});
-
-const event2 = new TestEvent2({
-    id: '123e4567-e89b-12d3-a456-426614174000',
-});
-
-await bus.publish(event);
-await bus.publish(event2);
-
-// publish one event at a time
-await bus.publish(event);
-await bus.publish(event2);
-
-// or publish multiple events at once
-await bus.publishAll([event, event2]);
-```
-
-### Event Bus with Validation
+### Event Bus
 
 ```ts
 import { IsUUID } from 'class-validator';
@@ -179,7 +154,9 @@ await bus.publish(event2);
 await bus.publishAll([event, event2]);
 ```
 
-### Query Bus with Validation
+---
+
+### Query Bus
 
 ```ts
 import { IsIn, IsInt } from 'class-validator';
@@ -211,33 +188,3 @@ const query = new TestQuery({
 // result type is automatically inferred from the query
 const result: string = await bus.execute(query);
 ```
-
-### Query Bus without Validation
-
-```ts
-import { QueryBus, QueryHandler, Query } from '@lgse/cqrs';
-
-class TestQuery extends Query<TestQuery, string> {
-  public order: 'asc' | 'desc';
-  public page: number;
-}
-
-@QueryHandler(TestQuery)
-class TestQueryHandler extends AbstractQueryHandler<TestQuery, string> {
-  public execute(_query: TestQuery): Promise<string> {
-    return Promise.resolve('test-result');
-  }
-}
-
-const bus = new QueryBus();
-bus.register([TestQueryHandler]);
-
-const query = new TestQuery({
-  order: 'asc',
-  page: 1,
-});
-
-// result type is automatically inferred from the query
-const result: string = await bus.execute(query);
-```
-
