@@ -47,7 +47,9 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     });
   }
 
-  async execute<TResult>(query: AbstractQuery<TResult>): Promise<TResult> {
+  async execute<TQuery extends object, TResult>(
+    query: AbstractQuery<TQuery, TResult>,
+  ): Promise<TResult> {
     const queryId = this.getQueryId(query as unknown as QueryBase);
 
     const handler = this.handlers.get(queryId);

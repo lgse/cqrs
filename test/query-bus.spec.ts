@@ -11,7 +11,7 @@ class TestResult {
   constructor(public readonly value: string) {}
 }
 
-class TestQuery extends AbstractQuery<TestResult> {}
+class TestQuery extends AbstractQuery<TestQuery, TestResult> {}
 
 @QueryHandler(TestQuery)
 class TestQueryHandler extends AbstractQueryHandler<TestQuery, TestResult> {
@@ -45,7 +45,7 @@ describe('QueryBus', () => {
   });
 
   it('should register multiple handlers', async () => {
-    class AnotherQuery extends AbstractQuery<string> {}
+    class AnotherQuery extends AbstractQuery<AnotherQuery, string> {}
 
     @QueryHandler(AnotherQuery)
     class AnotherQueryHandler extends AbstractQueryHandler<
