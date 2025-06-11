@@ -1,5 +1,10 @@
 # CQRS
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/lgse/cqrs/blob/main/LICENSE)
+[![npm](https://img.shields.io/npm/v/@lgse/cqrs.svg)](https://www.npmjs.com/package/@lgse/cqrs)
+[![Test](https://github.com/lgse/cqrs/actions/workflows/test.yaml/badge.svg)](https://github.com/lgse/cqrs/actions/workflows/test.yaml)
+[![codecov](https://codecov.io/gh/lgse/cqrs/branch/main/graph/badge.svg)](https://codecov.io/gh/lgse/cqrs)
+
 A collection of CQRS components for TypeScript:
 
 - Command Bus
