@@ -64,21 +64,27 @@ By default, handlers are instantiated using the `instance` method on the handler
 If you wanted to inject dependencies into your handlers, you can provide a custom `ICommandHandlerInstantiator`, `IEventHandlerInstantiator`, or `IQueryHandlerInstantiator` to the bus constructor.
 
 
-### Example: TypeDI Instantiation
+### Example: TypeDI Instantiator
 ```ts
-import { Container } from 'typedi';
-import { CommandBus, CommandHandlerType, ICommand, ICommandHandler, ICommandHandlerInstantiator } from '@lgse/cqrs';
+import {
+   CommandBus,
+   CommandHandlerType,
+   ICommand,
+   ICommandHandler,
+   ICommandHandlerInstantiator,
+} from '@lgse/cqrs';
+import { Container, Inject, Service, Token } from 'typedi';
 
 class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
-  instantiate<TCommand extends ICommand>(
-    handler: CommandHandlerType<TCommand>,
-  ): Promise<ICommandHandler<TCommand>> {
-    return Container.get(handler);
-  }
+   async instantiate<TCommand extends ICommand>(
+           handler: CommandHandlerType<TCommand>,
+   ): Promise<ICommandHandler<TCommand>> {
+      return Container.get(handler as Token<ICommandHandler<TCommand>>);
+   }
 }
 
 const bus = new CommandBus({
-  instantiator: new TypeDICommandHandlerInstantiator(),
+   instantiator: new TypeDICommandHandlerInstantiator(),
 });
 ```
 
@@ -87,26 +93,50 @@ const bus = new CommandBus({
 ### Command Bus
 
 ```ts
+import {
+   AbstractCommandHandler,
+   CommandBus,
+   CommandHandler,
+   CommandHandlerType,
+   ICommand,
+   ICommandHandler,
+   ICommandHandlerInstantiator,
+   ValidatedCommand,
+} from '@lgse/cqrs';
 import { IsString, IsUUID } from 'class-validator';
-import { AbstractCommandHandler, CommandBus, ValidatedCommand } from '@lgse/cqrs';
-import { TypeDICommandHandlerInstantiator } from './type-di-command-handler-instantiator';
-import { UsersRepository } from './users.repository';
+import { Container, Inject, Service, Token } from 'typedi';
 
-class CreateUser extends ValidatedCommand<CreateUser> {
-  @IsUUID()
-  public id: string;
-    
-  @IsString()
-  public name: string;
+class CreateUserCommand extends ValidatedCommand<CreateUserCommand> {
+   @IsUUID()
+   public id: string;
+
+   @IsString()
+   public name: string;
 }
 
-@CommandHandler(CreateUser)
-class CreateUserCommandHandler extends AbstractCommandHandler<CreateUser> {
-  @Inject(UsersRepository)
+@Service()
+class UsersRepository {
+   public async create(name: string): Promise<void> {
+      // create the user
+   }
+}
+
+@Service()
+@CommandHandler(CreateUserCommand)
+class CreateUserCommandHandler extends AbstractCommandHandler<CreateUserCommand> {
+  @Inject()
   private usersRepository: UsersRepository;
-    
-  public async execute(command: TestCommand): Promise<void> {
+
+  public async execute(command: CreateUserCommand): Promise<void> {
     await this.usersRepository.create(command.name);
+  }
+}
+
+class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
+  async instantiate<TCommand extends ICommand>(
+    handler: CommandHandlerType<TCommand>
+  ): Promise<ICommandHandler<TCommand>> {
+    return Container.get(handler as Token<ICommandHandler<TCommand>>);
   }
 }
 
