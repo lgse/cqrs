@@ -94,7 +94,7 @@ import {
 import { Container, Inject, Service, Token } from 'typedi';
 
 const bus = new CommandBus({
-  instantiator: new TypeDIHandlerInstantiator(),
+  instantiator: new TypediHandlerInstantiator(),
 });
 ```
 
@@ -140,7 +140,7 @@ class CreateUserCommandHandler extends AbstractCommandHandler<CreateUserCommand>
 }
 
 const bus = new CommandBus({
-  instantiator: new TypeDIInstantiator(),
+  instantiator: new TypediInstantiator(),
 });
 bus.register([CreateUserCommandHandler]);
 
