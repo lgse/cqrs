@@ -71,14 +71,15 @@ To use the TypeDI instantiator, you will need to install `typedi` as a dependenc
 npm install typedi
 ```
 
+Then you can use the `TypediHandlerInstantiator` to instantiate your handlers.
 ```ts
 import {
-   CommandBus,
-   CommandHandlerType,
-   ICommand,
-   ICommandHandler,
-   ICommandHandlerInstantiator,
-   TypediHandlerInstantiator,
+  CommandBus,
+  CommandHandlerType,
+  ICommand,
+  ICommandHandler,
+  ICommandHandlerInstantiator,
+  TypediHandlerInstantiator,
 } from '@lgse/cqrs';
 import { Container, Inject, Service, Token } from 'typedi';
 
