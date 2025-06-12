@@ -65,7 +65,12 @@ By default, handlers are instantiated using the `instance` method on the handler
 If you wanted to inject dependencies into your handlers, you can provide a custom `ICommandHandlerInstantiator`, `IEventHandlerInstantiator`, or `IQueryHandlerInstantiator` to the bus constructor.
 
 
-### Example: TypeDI Instantiator
+### TypeDI Instantiator
+To use the TypeDI instantiator, you will need to install `typedi` as a dependency.
+```bash
+npm install typedi
+```
+
 ```ts
 import {
    CommandBus,
@@ -73,19 +78,12 @@ import {
    ICommand,
    ICommandHandler,
    ICommandHandlerInstantiator,
+   TypediHandlerInstantiator,
 } from '@lgse/cqrs';
 import { Container, Inject, Service, Token } from 'typedi';
 
-class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
-   async instantiate<TCommand extends ICommand>(
-           handler: CommandHandlerType<TCommand>,
-   ): Promise<ICommandHandler<TCommand>> {
-      return Container.get(handler as Token<ICommandHandler<TCommand>>);
-   }
-}
-
 const bus = new CommandBus({
-   instantiator: new TypeDICommandHandlerInstantiator(),
+  instantiator: new TypeDIHandlerInstantiator(),
 });
 ```
 
@@ -95,31 +93,28 @@ const bus = new CommandBus({
 
 ```ts
 import {
-   AbstractCommandHandler,
-   CommandBus,
-   CommandHandler,
-   CommandHandlerType,
-   ICommand,
-   ICommandHandler,
-   ICommandHandlerInstantiator,
-   ValidatedCommand,
+  AbstractCommandHandler,
+  CommandBus,
+  ICommand,
+  TypediHandlerInstantiator,
+  ValidatedCommand,
 } from '@lgse/cqrs';
 import { IsString, IsUUID } from 'class-validator';
-import { Container, Inject, Service, Token } from 'typedi';
+import { Inject, Service } from 'typedi';
 
 class CreateUserCommand extends ValidatedCommand<CreateUserCommand> {
-   @IsUUID()
-   public id: string;
+  @IsUUID()
+  public id: string;
 
-   @IsString()
-   public name: string;
+  @IsString()
+  public name: string;
 }
 
 @Service()
 class UsersRepository {
-   public async create(name: string): Promise<void> {
-      // create the user
-   }
+  public async create(name: string): Promise<void> {
+    // create the user
+  }
 }
 
 @Service()
@@ -133,16 +128,8 @@ class CreateUserCommandHandler extends AbstractCommandHandler<CreateUserCommand>
   }
 }
 
-class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
-  async instantiate<TCommand extends ICommand>(
-    handler: CommandHandlerType<TCommand>
-  ): Promise<ICommandHandler<TCommand>> {
-    return Container.get(handler as Token<ICommandHandler<TCommand>>);
-  }
-}
-
 const bus = new CommandBus({
-  instantiator: new TypeDICommandHandlerInstantiator(),
+  instantiator: new TypeDIInstantiator(),
 });
 bus.register([CreateUserCommandHandler]);
 

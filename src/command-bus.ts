@@ -19,7 +19,7 @@ import {
   COMMAND_METADATA,
 } from './decorators/constants';
 import { CommandHandlerNotFoundException } from './exceptions';
-import { defaultCommandHandlerInstantiator } from './helpers/default-command-handler-instantiator';
+import { defaultHandlerInstantiator } from './helpers';
 import { InvalidCommandHandlerException } from './index';
 
 export class CommandBus<CommandBase extends ICommand = ICommand>
@@ -36,7 +36,7 @@ export class CommandBus<CommandBase extends ICommand = ICommand>
     instantiator?: ICommandHandlerInstantiator;
     logger?: ILogger;
   } = {}) {
-    this.instantiator = instantiator ?? defaultCommandHandlerInstantiator;
+    this.instantiator = instantiator ?? defaultHandlerInstantiator;
     this.logger = logger;
   }
 

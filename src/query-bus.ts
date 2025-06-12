@@ -16,7 +16,7 @@ import {
   InvalidQueryHandlerException,
   QueryHandlerNotFoundException,
 } from './exceptions';
-import { defaultQueryHandlerInstantiator } from './helpers/default-query-handler-instantiator';
+import { defaultHandlerInstantiator } from './helpers';
 
 export class QueryBus<QueryBase extends IQuery = IQuery>
   implements IQueryBus<QueryBase>
@@ -33,7 +33,7 @@ export class QueryBus<QueryBase extends IQuery = IQuery>
     logger?: ILogger;
   } = {}) {
     this.logger = logger;
-    this.instantiator = instantiator ?? defaultQueryHandlerInstantiator;
+    this.instantiator = instantiator ?? defaultHandlerInstantiator;
   }
 
   bind<TQuery extends QueryBase, TResult extends IQueryResult = any>(

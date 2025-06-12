@@ -9,8 +9,7 @@ import type { Type } from './types';
 
 import { EVENTS_HANDLER_METADATA } from './decorators/constants';
 import { InvalidEventsHandlerException } from './exceptions/invalid-events-handler.exception';
-import { defaultEventHandlerInstantiator } from './helpers/default-event-handler-instantiator';
-import { defaultEventIdProvider } from './helpers/default-event-id-provider';
+import { defaultEventIdProvider, defaultHandlerInstantiator } from './helpers';
 
 export class EventBus<EventBase extends IEvent = IEvent>
   implements IEventBus<EventBase>
@@ -28,7 +27,7 @@ export class EventBus<EventBase extends IEvent = IEvent>
     instantiator?: IEventHandlerInstantiator;
   } = {}) {
     this.eventIdProvider = eventIdProvider ?? defaultEventIdProvider;
-    this.instantiator = instantiator ?? defaultEventHandlerInstantiator;
+    this.instantiator = instantiator ?? defaultHandlerInstantiator;
   }
 
   public bind(handler: EventsHandlerType<EventBase>, eventId: string) {
