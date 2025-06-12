@@ -78,7 +78,7 @@ class TypeDICommandHandlerInstantiator implements ICommandHandlerInstantiator {
 }
 
 const bus = new CommandBus({
-    instantiator: new TypeDICommandHandlerInstantiator(),
+  instantiator: new TypeDICommandHandlerInstantiator(),
 });
 ```
 
