@@ -140,7 +140,7 @@ class CreateUserCommandHandler extends AbstractCommandHandler<CreateUserCommand>
 }
 
 const bus = new CommandBus({
-  instantiator: new TypediInstantiator(),
+  instantiator: new TypediHandlerInstantiator(),
 });
 bus.register([CreateUserCommandHandler]);
 
