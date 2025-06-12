@@ -34,6 +34,7 @@ You will need to modify your `tsconfig.json`:
   "compilerOptions": {
     "emitDecoratorMetadata": true, // required by class-validator
     "experimentalDecorators": true, // required by class-validator
+    "strictPropertyInitialization": false, // properties are initialized by the constructor in the abstract classes
   }
 }
 ```
