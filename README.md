@@ -39,6 +39,16 @@ You will need to modify your `tsconfig.json`:
 }
 ```
 
+### Dependency Injection Dependencies (optional)
+This library provides a `TypediHandlerInstantiator` for use with [TypeDI](https://github.com/typedi/typedi).
+
+To use the `TypediHandlerInstantiator` you will need to install `typedi` as a dependency.
+```bash
+npm install typedi
+```
+
+---
+
 ## Usage
 
 ### Validation
