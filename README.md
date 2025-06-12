@@ -88,7 +88,7 @@ const bus = new CommandBus({
 
 ```ts
 import { IsString, IsUUID } from 'class-validator';
-import { CommandBus, CommandHandler, ValidatedCommand } from '@lgse/cqrs';
+import { AbstractCommandHandler, CommandBus, ValidatedCommand } from '@lgse/cqrs';
 import { TypeDICommandHandlerInstantiator } from './type-di-command-handler-instantiator';
 import { UsersRepository } from './users.repository';
 
@@ -101,7 +101,7 @@ class CreateUser extends ValidatedCommand<CreateUser> {
 }
 
 @CommandHandler(CreateUser)
-class CreateUserCommandHandler extends ValidatedCommandHandler<CreateUser> {
+class CreateUserCommandHandler extends AbstractCommandHandler<CreateUser> {
   @Inject(UsersRepository)
   private usersRepository: UsersRepository;
     
