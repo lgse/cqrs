@@ -83,15 +83,7 @@ npm install typedi
 
 Then you can use the `TypediHandlerInstantiator` to instantiate your handlers.
 ```ts
-import {
-  CommandBus,
-  CommandHandlerType,
-  ICommand,
-  ICommandHandler,
-  ICommandHandlerInstantiator,
-  TypediHandlerInstantiator,
-} from '@lgse/cqrs';
-import { Container, Inject, Service, Token } from 'typedi';
+import { CommandBus, TypediHandlerInstantiator } from '@lgse/cqrs';
 
 const bus = new CommandBus({
   instantiator: new TypediHandlerInstantiator(),
