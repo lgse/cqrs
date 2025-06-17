@@ -8,7 +8,7 @@ import type {
 import type { Type } from './types';
 
 import { EVENTS_HANDLER_METADATA } from './decorators/constants';
-import { InvalidEventsHandlerException } from './exceptions/invalid-events-handler.exception';
+import { InvalidEventsHandlerException } from './exceptions';
 import { defaultEventIdProvider, defaultHandlerInstantiator } from './helpers';
 
 export class EventBus<EventBase extends IEvent = IEvent>

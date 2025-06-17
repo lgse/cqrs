@@ -18,9 +18,11 @@ import {
   COMMAND_HANDLER_METADATA,
   COMMAND_METADATA,
 } from './decorators/constants';
-import { CommandHandlerNotFoundException } from './exceptions';
+import {
+  CommandHandlerNotFoundException,
+  InvalidCommandHandlerException,
+} from './exceptions';
 import { defaultHandlerInstantiator } from './helpers';
-import { InvalidCommandHandlerException } from './index';
 
 export class CommandBus<CommandBase extends ICommand = ICommand>
   implements ICommandBus
