@@ -5,6 +5,7 @@
     "module": "esnext",
     "outDir": "./dist/esm",
     "rootDir": "src",
+    "target": "esnext"
   },
   "include": ["src/**/*.ts"]
 }

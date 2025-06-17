@@ -5,6 +5,7 @@
     "module": "commonjs",
     "outDir": "./dist/cjs",
     "rootDir": "src",
+    "target": "es2017"
   },
   "include": ["src/**/*.ts"]
 }
