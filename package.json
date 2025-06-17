@@ -8,13 +8,13 @@
   "license": "MIT",
   "name": "@lgse/cqrs",
   "type": "module",
-  "version": "0.16.0",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "version": "0.19.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js",
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js",
     "types": "./dist/types/index.d.ts"
   },
   "files": [
@@ -25,12 +25,10 @@
     "url": "git+https://github.com/lgse/cqrs.git"
   },
   "scripts": {
-    "build": "bun run build:clean && bun run build:esm && bun run build:cjs",
-    "build:clean": "rm -rf dist",
-    "build:esm": "tsc --module esnext --project tsconfig.esm.json",
-    "build:cjs": "tsc --module commonjs --project tsconfig.cjs.json",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
+    "prepublishOnly": "bun run build",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -50,7 +48,6 @@
     "@types/node": "^20",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
-    "typedi": "^0.10.0",
     "esbuild": "^0.25.5",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
@@ -58,7 +55,9 @@
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
     "ts-jest": "^29.1.0",
+    "tsup": "^8.5.0",
     "type-fest": "^4.41.0",
+    "typedi": "^0.10.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1"
   },
