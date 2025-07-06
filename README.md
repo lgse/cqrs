@@ -136,7 +136,7 @@ const bus = new CommandBus({
 });
 bus.register([CreateUserCommandHandler]);
 
-const command = new CreateUserCommand({
+const command = CreateUserCommand.create({
   id: '123e4567-e89b-12d3-a456-426614174000',
   name: 'test',
 });
@@ -178,12 +178,12 @@ class UserEventsHandler extends AbstractEventsHandler<UserCreatedEvent | UserUpd
 const bus = new EventBus();
 bus.register([UserEventsHandler]);
 
-const event = new UserCreatedEvent({
+const event = UserCreatedEvent.create({
   id: '123e4567-e89b-12d3-a456-426614174000',
   name: 'test',
 });
 
-const event2 = new UserUpdatedEvent({
+const event2 = UserUpdatedEvent.create({
    id: '123e4567-e89b-12d3-a456-426614174000',
    name: 'test',
 });
@@ -222,7 +222,7 @@ class GetItemsQueryHandler extends AbstractQueryHandler<GetItemsQuery, string[]>
 const bus = new QueryBus();
 bus.register([GetItemsQueryHandler]);
 
-const query = new GetItemsQuery({
+const query = GetItemsQuery.create({
   order: 'asc',
   page: 1,
 });
