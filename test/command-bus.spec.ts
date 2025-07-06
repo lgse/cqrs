@@ -52,8 +52,8 @@ describe('CommandBus', () => {
     const bus = new CommandBus();
     bus.register([TestCommandHandler, TestCommand2Handler]);
 
-    const command = new TestCommand({ name: 'test' });
-    const command2 = new TestCommand2({ name: 'test2' });
+    const command = TestCommand.create({ name: 'test' });
+    const command2 = TestCommand2.create({ name: 'test2' });
 
     await bus.execute(command);
     await bus.execute(command2);
@@ -65,7 +65,7 @@ describe('CommandBus', () => {
 
   it('should throw an error if no handler is found', async () => {
     const bus = new CommandBus();
-    const command = new TestCommand();
+    const command = TestCommand.create({ name: 'test' });
 
     await expect(async () => bus.execute(command)).rejects.toThrow(
       'No handler found for the command: "TestCommand"',

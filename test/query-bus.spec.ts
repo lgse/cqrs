@@ -48,8 +48,8 @@ describe('QueryBus', () => {
   it('should execute a query', async () => {
     const bus = new QueryBus();
     bus.register([TestQueryHandler, TestQuery2Handler]);
-    const query = new TestQuery();
-    const query2 = new TestQuery2();
+    const query = TestQuery.create();
+    const query2 = TestQuery2.create();
 
     const result = await bus.execute(query);
     expect(result).toBeInstanceOf(TestResult);
@@ -62,7 +62,7 @@ describe('QueryBus', () => {
 
   it('should throw when no handler is found', async () => {
     const bus = new QueryBus();
-    const query = new TestQuery();
+    const query = TestQuery.create();
 
     await expect(bus.execute(query)).rejects.toThrow(
       QueryHandlerNotFoundException,
@@ -85,7 +85,7 @@ describe('QueryBus', () => {
     const bus = new QueryBus();
     bus.register([TestQueryHandler, AnotherQueryHandler]);
 
-    const result1 = await bus.execute(new TestQuery());
+    const result1 = await bus.execute(TestQuery.create());
     expect(result1.value).toBe('test-result');
 
     const result2 = await bus.execute(new AnotherQuery());

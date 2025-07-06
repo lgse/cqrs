@@ -42,8 +42,10 @@ describe('EventBus', () => {
     const bus = new EventBus();
     bus.register([TestEventHandler]);
 
-    const event = new TestEvent();
-    const event2 = new TestEvent2({
+    const event = TestEvent.create({
+      id: '123e4567-e89b-12d3-a456-426614174000',
+    });
+    const event2 = TestEvent2.create({
       id: '123e4567-e89b-12d3-a456-426614174000',
     });
 
@@ -58,8 +60,8 @@ describe('EventBus', () => {
     bus.register([TestEventHandler]);
 
     const events = [
-      new TestEvent(),
-      new TestEvent2({ id: '123e4567-e89b-12d3-a456-426614174000' }),
+      TestEvent.create({ id: '123e4567-e89b-12d3-a456-426614174000' }),
+      TestEvent2.create({ id: '123e4567-e89b-12d3-a456-426614174000' }),
     ];
 
     await bus.publishAll(events);
